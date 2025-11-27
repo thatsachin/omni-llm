@@ -1,0 +1,74 @@
+{
+  "name": "omni-llm",
+  "version": "1.0.2",
+  "description": "A unified, zero-dependency interface for multiple LLM providers (OpenAI, Anthropic, Google, Groq, Ollama, xAI, DeepSeek) with streaming, tool calling, vision, and thinking mode support",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "llm",
+    "openai",
+    "anthropic",
+    "google",
+    "gemini",
+    "ollama",
+    "groq",
+    "xai",
+    "grok",
+    "deepseek",
+    "ai",
+    "chatgpt",
+    "claude",
+    "gpt-4",
+    "gpt-4o",
+    "claude-3",
+    "streaming",
+    "tool-calling",
+    "function-calling",
+    "vision",
+    "multimodal",
+    "thinking-mode",
+    "reasoning",
+    "unified-api",
+    "zero-dependencies"
+  ],
+  "author": "Sachin Varma",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thatsachin/omni-llm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thatsachin/omni-llm/issues"
+  },
+  "homepage": "https://github.com/thatsachin/omni-llm#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "fast-check": "^3.15.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.1.0"
+  }
+}
