@@ -1,6 +1,6 @@
 {
   "name": "omni-llm",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A unified, zero-dependency interface for multiple LLM providers (OpenAI, Anthropic, Google, Groq, Ollama, xAI, DeepSeek) with streaming, tool calling, vision, and thinking mode support",
   "type": "module",
   "main": "./dist/index.js",

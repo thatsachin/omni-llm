@@ -79,7 +79,7 @@ export class AttachmentProcessor {
   }
 
   /**
-   * Create an attachment from a URL
+   * Create an attachment from a URL (for images that support URL references)
    */
   static fromUrl(url: string, type: AttachmentType = 'image'): Attachment {
     return {
@@ -87,6 +87,57 @@ export class AttachmentProcessor {
       source: 'url',
       data: url,
       mimeType: undefined,
+    };
+  }
+
+  /**
+   * Fetch a file from URL and create an attachment (Node.js and browser)
+   * Useful for PDFs and images from remote URLs that need to be embedded
+   */
+  static async fetchFromUrl(url: string): Promise<Attachment> {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new ValidationError(
+        `Failed to fetch URL: ${response.status} ${response.statusText}`,
+        'url',
+        url
+      );
+    }
+
+    // Try to get MIME type from Content-Type header
+    const contentType = response.headers.get('content-type');
+    let mimeType: string | undefined;
+    if (contentType) {
+      const parts = contentType.split(';');
+      if (parts[0]) {
+        mimeType = parts[0].trim();
+      }
+    }
+    
+    // If no Content-Type or unsupported, try to infer from URL extension
+    if (!mimeType || !MIME_TYPE_MAP[mimeType]) {
+      const urlPath = new URL(url).pathname;
+      const ext = urlPath.substring(urlPath.lastIndexOf('.')).toLowerCase();
+      mimeType = EXTENSION_MIME_MAP[ext];
+    }
+    
+    if (!mimeType || !MIME_TYPE_MAP[mimeType]) {
+      throw new ValidationError(
+        `Could not determine supported MIME type for URL: ${url}`,
+        'url',
+        url
+      );
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const base64Data = Buffer.from(arrayBuffer).toString('base64');
+    const attachmentType = MIME_TYPE_MAP[mimeType] as AttachmentType;
+
+    return {
+      type: attachmentType,
+      source: 'base64',
+      data: base64Data,
+      mimeType,
     };
   }
 

@@ -27,7 +27,7 @@ Both `omni-llm` and `LLM.js` are excellent zero-dependency libraries for working
 | **Custom Providers** | ✅ Easy registration | ✅ Extensible |
 | **Error Handling** | ✅ Typed errors | ⚠️ Generic |
 | **Local Models** | ✅ Ollama native | ✅ Ollama native |
-| **PDF Attachments** | ❌ No | ✅ Yes |
+| **PDF Attachments** | ✅ Yes (Anthropic, Google) | ✅ Yes |
 | **Browser Support** | ✅ Yes | ✅ Yes |
 
 **Choose omni-llm if you prefer:**
@@ -36,7 +36,6 @@ Both `omni-llm` and `LLM.js` are excellent zero-dependency libraries for working
 - Strongly typed error classes for precise error handling
 
 **Choose LLM.js if you prefer:**
-- PDF document attachments
 - Options-based configuration style
 - Established library with longer track record
 
@@ -177,34 +176,51 @@ const response = await chat.chat('What\'s the weather in Tokyo?');
 console.log(response.content); // "The weather in Tokyo is 22°C and sunny."
 ```
 
-### 3. Vision (Image Analysis)
+### 3. Vision & Documents (Images and PDFs)
 
 ```typescript
 import { LLM, AttachmentProcessor } from 'omni-llm';
 
 const chat = new LLM('openai/gpt-4o');
 
-// From URL
+// Image from URL
 const response = await chat.chat('What\'s in this image?', {
   attachments: [
-    await AttachmentProcessor.fromUrl('https://example.com/image.jpg')
+    AttachmentProcessor.fromUrl('https://example.com/image.jpg')
   ]
 });
 
-// From local file
+// Image from local file
 const response2 = await chat.chat('Describe this photo', {
   attachments: [
     await AttachmentProcessor.fromPath('./photo.png')
   ]
 });
 
-// From base64
+// Image from base64
 const response3 = await chat.chat('What do you see?', {
   attachments: [
     AttachmentProcessor.fromBase64(base64String, 'image/jpeg')
   ]
 });
+
+// PDF document (Anthropic and Google only)
+const claude = new LLM('anthropic/claude-3-5-sonnet-20241022');
+const pdfResponse = await claude.chat('Summarize this document', {
+  attachments: [
+    await AttachmentProcessor.fromPath('./document.pdf')
+  ]
+});
+
+// Fetch PDF from URL
+const pdfFromUrl = await claude.chat('What are the key points?', {
+  attachments: [
+    await AttachmentProcessor.fetchFromUrl('https://example.com/report.pdf')
+  ]
+});
 ```
+
+**Note:** PDF support is available with Anthropic (Claude) and Google (Gemini) providers.
 
 ### 4. Thinking Mode (Extended Reasoning)
 
